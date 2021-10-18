@@ -12,8 +12,8 @@ export class SearchBar extends Component {
   };
   handleSearchSubmit = (e) => {
     e.preventDefault();
-    console.log("BEFORE FETCH", this.state.searchValue, this.state.perPage);
-    // this.setState({ searchValue: '' });
+    // console.log("BEFORE FETCH", this.state.searchValue, this.state.perPage);
+    // this.setState({ searchValue: "" });
     this.props.getSearchValues(this.state.searchValue, this.state.perPage);
     this.setState({ searchValue: "", perPage: 12 });
   };

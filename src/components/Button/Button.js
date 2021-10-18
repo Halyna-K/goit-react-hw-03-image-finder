@@ -1,6 +1,11 @@
 import s from "./Button.module.css";
 
-window.scrollTo({
-  top: document.documentElement.scrollHeight,
-  behavior: "smooth",
-});
+export const Button = ({ onClick }) => {
+  return (
+    <div className='container'>
+      <button type="button" className={s.Button} onClick={onClick}>
+        load more
+      </button>
+    </div>
+  );
+};

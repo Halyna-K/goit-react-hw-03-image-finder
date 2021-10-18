@@ -4,16 +4,16 @@ export class PixabayFetchObject {
   constructor(base_url, api_key) {
     this.base_url = base_url;
     this.api_key = api_key;
-    this._searchQuery = "";
+    this._query = "";
     this._page = 1;
     this._perPage = 12;
     this.endPoint = "";
   }
   get searchQuery() {
-    return this._searchQuery;
+    return this._query;
   }
   set searchQuery(value) {
-    return (this._searchQuery = value);
+    return (this._query = value);
   }
   get page() {
     return this._page;
@@ -22,7 +22,8 @@ export class PixabayFetchObject {
     return (this._page += value);
   }
   resetPage() {
-    return (this._page = 1)((this._perPage = 12));
+    return (this._page = 1);
+    // ((this._perPage = 12));
   }
   get perPage() {
     return this._perPage;
@@ -33,39 +34,16 @@ export class PixabayFetchObject {
 
   async searchPhotos() {
     axios.defaults.baseURL = this.base_url;
-    axios.defaults.headers.common.Authorization = this.api_key;
 
-    this.endPoint = "search";
-    // console.log(
-    //   "searchQuery:",
-    //   this.searchQuery,
-    //   "page:",
-    //   this.page,
-    //   "perPage:",
-    //   this.perPage
-    // );
-    let params = `?q=${this.searchQuery}&page=${this.page}&per_page=${this.perPage}`;
+    let params = `?key=${this.api_key}&q=${this.query}&page=${this.page}&per_page=${this.perPage}`;
     let url = this.endPoint + params;
 
     try {
       const result = await axios.get(url);
-      const data = result.data.photos;
+      const data = result.data.hits;
       return data;
     } catch (err) {
       return err.message;
     }
-    // return axios
-    //   .get(url)
-    //   .then(result => {
-    //     // console.log(result);
-    //     return result.data;
-    //   })
-    //   .then(data => {
-    //     // console.log(data);
-    //     return data.photos;
-    //   })
-    //   .catch(err => {
-    //     console.log(err);
-    //   });
   }
 }

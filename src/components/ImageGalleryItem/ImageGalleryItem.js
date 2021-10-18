@@ -1,16 +1,13 @@
 import s from "./ImageGalleryItem.module.css";
 
-export const ImageGalleryItem = ({ el }) => {
+export const ImageGalleryItem = ({ image, onClick }) => {
   return (
-    console.log(el.hits),
-    (
-      <li key={el.id} className={s.ImageGalleryItem}>
-        <img
-          src={el.hits}
-          alt={el.photographer}
-          className={s.ImageGalleryItemImage}
-        />
-      </li>
-    )
+    <li key={image.id} className={s.ImageGalleryItem} onClick={onClick}>
+      <img
+        src={image.webformatURL}
+        alt={image.tags}
+        className={s.ImageGalleryItemImage}
+      />
+    </li>
   );
 };

@@ -2,86 +2,65 @@ import "./App.css";
 import { Component } from "react";
 import { SearchBar } from "./components/Searchbar/SearchBar";
 import { ImageGallery } from "./components/ImageGallery/ImageGallery";
-// import ImageGalleryItem from "./components/ImageGalleryItem/ImageGalleryItem";
-// import { Modal } from './components/Modal/Modal';
-
-// let searchQuery = 'banana';
-// let searchPage = 1;
-// let searchPerPage = 5;
-// let endPoint = 'search';
-// let params = `?query=${searchQuery}&page=${searchPage}&per_page=${searchPerPage}`;
-// let url = endPoint + params;
+import { ImageGalleryItem } from "./components/ImageGalleryItem/ImageGalleryItem";
+import { Button } from "./components/Button/Button";
+import { Modal } from "./components/Modal/Modal";
+import LoaderSpinner from "./components/Loader/Loader";
 
 class App extends Component {
   state = {
-    counter: 0,
-    isOpen: false,
-
     images: [],
-    showModal: false,
     searchValue: "",
     perPage: 12,
+    showModal: false,
+    largeImage: "",
   };
-  componentDidMount() {
-    // console.log(`MOUNT`);
-    const localProducts = localStorage.getItem("products");
-    const parseProducts = JSON.parse(localProducts);
-    if (parseProducts) {
-      this.setState({ images: parseProducts });
-    }
-  }
+
   componentDidUpdate(prevProps, prevState) {
-    // console.log(`UPDATE`);
     if (prevState.images !== this.state.images) {
-      localStorage.setItem("products", JSON.stringify(this.state.images));
+      this.setState(this.state.images);
     }
-    // if (prevState.searchValue !== this.state.searchValue) {
-    //   console.log(`dd`);
-    // }
   }
 
-  componentWillUnmount() {
-    // console.log(`UNMOUNT`);
-  }
-
-  addNewImage = (obj) =>
-    this.setState((prevState) => ({
-      images: [...prevState.images, obj],
-    }));
-
-  deleteImage = (id) =>
-    this.setState((prev) => ({
-      images: prev.images.filter((prod) => prod.id !== id),
-    }));
   toggleModal = () => {
     this.setState({ showModal: !this.state.showModal });
+  };
+
+  onImageClick = (e) => {
+    // if (e.currentTarget === e.target) {
+    this.toggleModal();
+    // this.setState({ largeImage: e.largeImageURL });
+    // }
   };
 
   getSearchValues = (searchValue, perPage) =>
     this.setState({ searchValue, perPage });
 
   render() {
-    // console.log(`RENDER method`);
-    const { searchValue, perPage } = this.state;
+    const { images, searchValue, perPage, showModal } = this.state;
+    console.log(this.state);
     return (
       <div className="App">
         <SearchBar getSearchValues={this.getSearchValues} />
+        {/* <LoaderSpinner> */}
         <ImageGallery searchValue={searchValue} perPage={perPage} />
+        {/* </LoaderSpinner> */}
 
-        {/* {this.state.showModal && (
+        {showModal && (
           <Modal toggleModal={this.toggleModal}>
-            <Form addNewImage={this.addNewImage} />
+            <ImageGalleryItem
+              image={this.props.image}
+              // src={this.state.largeImage}
+              onClick={this.toggleModal}
+            />
+            {/* <ImageGalleryItem
+              src={images.largeImageURL}
+              // onClick={() => {
+              //   this.toggleModal();
+              // }}
+            /> */}
           </Modal>
         )}
-        <h1>FE-35 Product</h1>
-        <button type="button" onClick={this.toggleModal}>
-          Add Product
-        </button>
-        {/* === РЕНДЕР КОМПОНЕНТА СПИСКА ПРОДУКТОВ ===
-        <ProductList
-          products={this.state.images}
-          onDeleteProduct={this.deleteProduct}
-        /> */}
       </div>
     );
   }
