@@ -1,19 +1,19 @@
 import s from "./ImageGallery.module.css";
 import { Component } from "react";
-import { PixabayFetchObject } from "../Services/pixabay";
+import { FetchObject } from "../Services/pixabay";
 import { ImageGalleryItem } from "../ImageGalleryItem/ImageGalleryItem";
 import { Button } from "..//Button/Button";
 
 const base_url = `https://pixabay.com/api/`;
 const api_key = `23194515-4229c06a71e7a36cb0b196559`;
-const newPixabayFetchObject = new PixabayFetchObject(base_url, api_key);
+const newFetchObject = new FetchObject(base_url, api_key);
 
 export class ImageGallery extends Component {
   state = {
     searchResults: [],
   };
   componentDidMount() {
-    this.scrollToBottom();
+    // this.scrollToBottom();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -21,10 +21,10 @@ export class ImageGallery extends Component {
       prevProps.searchValue !== this.props.searchValue ||
       prevProps.perPage !== this.props.perPage
     ) {
-      newPixabayFetchObject.resetPage();
-      newPixabayFetchObject.query = this.props.searchValue;
-      newPixabayFetchObject.perPage = this.props.perPage;
-      newPixabayFetchObject
+      newFetchObject.resetPage();
+      newFetchObject.query = this.props.searchValue;
+      newFetchObject.perPage = this.props.perPage;
+      newFetchObject
         .searchPhotos()
         .then((searchResults) => {
           this.setState({ searchResults });
@@ -33,12 +33,14 @@ export class ImageGallery extends Component {
           console.log(err);
         });
     }
-    this.scrollToBottom();
+    if (newFetchObject.page !== 1) {
+      this.scrollToBottom();
+    }
   }
 
   handleClick = () => {
-    newPixabayFetchObject.page = 1;
-    newPixabayFetchObject
+    newFetchObject.page = 1;
+    newFetchObject
       .searchPhotos()
       .then((searchResults) => {
         this.setState((prev) => ({
@@ -51,9 +53,11 @@ export class ImageGallery extends Component {
   };
 
   scrollToBottom = () => {
-    window.scrollTo({
-      top: document.documentElement.scrollHeight,
-      behavior: "smooth",
+    setTimeout(() => {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: "smooth",
+      });
     });
   };
 
@@ -67,14 +71,11 @@ export class ImageGallery extends Component {
               key={el.id}
               image={el}
               src={el.largeImageURL}
-              onClick={() => {
-                this.toggleModal(el);
-              }}
+              onImageClick={this.props.onImageClick}
             />
           ))}
-
-          {searchResults.length >= 12 && <Button onClick={this.handleClick} />}
         </ul>
+        {searchResults.length >= 12 && <Button onClick={this.handleClick} />}
       </>
     );
   }

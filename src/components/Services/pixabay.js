@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export class PixabayFetchObject {
+export class FetchObject {
   constructor(base_url, api_key) {
     this.base_url = base_url;
     this.api_key = api_key;

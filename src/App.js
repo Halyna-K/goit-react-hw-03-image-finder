@@ -2,8 +2,6 @@ import "./App.css";
 import { Component } from "react";
 import { SearchBar } from "./components/Searchbar/SearchBar";
 import { ImageGallery } from "./components/ImageGallery/ImageGallery";
-import { ImageGalleryItem } from "./components/ImageGalleryItem/ImageGalleryItem";
-import { Button } from "./components/Button/Button";
 import { Modal } from "./components/Modal/Modal";
 import LoaderSpinner from "./components/Loader/Loader";
 
@@ -14,11 +12,13 @@ class App extends Component {
     perPage: 12,
     showModal: false,
     largeImage: "",
+    isLoading: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.images !== this.state.images) {
       this.setState(this.state.images);
+      this.setState({ isLoading: true });
     }
   }
 
@@ -26,39 +26,32 @@ class App extends Component {
     this.setState({ showModal: !this.state.showModal });
   };
 
-  onImageClick = (e) => {
-    // if (e.currentTarget === e.target) {
+  onImageClick = (largeImageURL) => {
+    this.setState({ largeImage: largeImageURL });
     this.toggleModal();
-    // this.setState({ largeImage: e.largeImageURL });
-    // }
   };
 
   getSearchValues = (searchValue, perPage) =>
     this.setState({ searchValue, perPage });
 
   render() {
-    const { images, searchValue, perPage, showModal } = this.state;
-    console.log(this.state);
+    const { searchValue, perPage, showModal, largeImage, isLoading } =
+      this.state;
+
     return (
       <div className="App">
         <SearchBar getSearchValues={this.getSearchValues} />
-        {/* <LoaderSpinner> */}
-        <ImageGallery searchValue={searchValue} perPage={perPage} />
-        {/* </LoaderSpinner> */}
+
+        <ImageGallery
+          searchValue={searchValue}
+          perPage={perPage}
+          onImageClick={this.onImageClick}
+        />
+        {isLoading && <LoaderSpinner />}
 
         {showModal && (
           <Modal toggleModal={this.toggleModal}>
-            <ImageGalleryItem
-              image={this.props.image}
-              // src={this.state.largeImage}
-              onClick={this.toggleModal}
-            />
-            {/* <ImageGalleryItem
-              src={images.largeImageURL}
-              // onClick={() => {
-              //   this.toggleModal();
-              // }}
-            /> */}
+            <img src={largeImage} alt="" />
           </Modal>
         )}
       </div>

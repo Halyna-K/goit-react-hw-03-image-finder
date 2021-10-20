@@ -10,7 +10,7 @@ export default class LoaderSpinner extends Component {
     return (
       <Loader
         className="container"
-        type="Watch"
+        type="Grid"
         color="#3f51b5"
         height={100}
         width={100}
