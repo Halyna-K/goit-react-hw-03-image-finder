@@ -9,16 +9,16 @@ class App extends Component {
   state = {
     images: [],
     searchValue: "",
+    largeImage: "",
     perPage: 12,
     showModal: false,
-    largeImage: "",
     isLoading: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.images !== this.state.images) {
       this.setState(this.state.images);
-      this.setState({ isLoading: true });
+      // this.setState({ isLoading: true });
     }
   }
 
@@ -31,8 +31,10 @@ class App extends Component {
     this.toggleModal();
   };
 
-  getSearchValues = (searchValue, perPage) =>
+  getSearchValues = (searchValue, perPage) => {
     this.setState({ searchValue, perPage });
+    this.setState({ isLoading: true });
+  };
 
   render() {
     const { searchValue, perPage, showModal, largeImage, isLoading } =
